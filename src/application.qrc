@@ -19,7 +19,6 @@
         <file>qml/ConfigUI.qml</file>
         <file>qml/Notifications.qml</file>
         <file>qml/ConfigGeneral.qml</file>
-        <file>qml/ConfigReports.qml</file>
         <file>qml/Frame.qml</file>
         <file>images/cd.png</file>
         <file>qml/Media.qml</file>
