@@ -1,0 +1,32 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/FpsItem.qml</file>
+        <file>qml/ArtistSelector.qml</file>
+        <file>qml/BarBackground.qml</file>
+        <file>qml/AnimatedDialog.qml</file>
+        <file>qml/LemuriMediaCenter.qml</file>
+        <file>qml/PlayingBar.qml</file>
+        <file>qml/AlbumDelegate.qml</file>
+        <file>qml/Volume.qml</file>
+        <file>qml/Background.qml</file>
+        <file>qml/main.qml</file>
+        <file>qml/images/spinner.png</file>
+        <file>qml/MusicDelegate.qml</file>
+        <file>qml/MusicsView.qml</file>
+        <file>qml/AlbumSelector.qml</file>
+        <file>qml/Video.qml</file>
+        <file>qml/Configuration.qml</file>
+        <file>qml/ConfigUI.qml</file>
+        <file>qml/Notifications.qml</file>
+        <file>qml/ConfigGeneral.qml</file>
+        <file>qml/ConfigReports.qml</file>
+        <file>qml/Frame.qml</file>
+        <file>images/cd.png</file>
+        <file>qml/Media.qml</file>
+        <file>images/dvd.png</file>
+        <file>qml/GenresView.qml</file>
+        <file>images/box-shadow.png</file>
+        <file>images/box-shadow-selected.png</file>
+        <file>qml/ShortcutButton.qml</file>
+    </qresource>
+</RCC>
