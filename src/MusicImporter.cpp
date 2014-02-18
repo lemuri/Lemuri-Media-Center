@@ -1,6 +1,7 @@
 #include "MusicImporter.h"
 
 #include "MediaCenter.h"
+#include "mimefileresolver.h"
 
 #include <QCoreApplication>
 #include <QCryptographicHash>
@@ -21,6 +22,7 @@ MusicImporter::MusicImporter() :
     m_mediaPath(MediaCenter::pathMedia()),
     m_mediaCount(0)
 {
+    TagLib::FileRef::addFileTypeResolver(new Lemuri::FileTypeResolver());
 }
 
 void MusicImporter::init()

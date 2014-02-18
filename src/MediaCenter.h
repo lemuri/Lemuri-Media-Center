@@ -47,7 +47,6 @@ public:
     Q_INVOKABLE void increaseVolume();
     Q_INVOKABLE void decreaseVolume();
     Q_INVOKABLE void hideVideo();
-    Q_INVOKABLE void clearPlayingList();
 
     QStringList genreFilters() const;
     void setGenreFilters(const QStringList &genreFilters);
@@ -91,7 +90,6 @@ private slots:
 protected:
     friend class KeyManager;
     void close();
-    void nextMedia();
 
 private:
     void createMediaFolders();

@@ -17,13 +17,20 @@ public:
     QMediaPlayer* mediaObject() const;
     void loadClips();
 
+    qint64 duration() const;
+    qint64 position() const;
+    void setPosition(qint64 position);
+
     Q_INVOKABLE void stop();
+    Q_INVOKABLE void pause();
     Q_INVOKABLE void nextClip();
     Q_INVOKABLE void addMedia(const QString &filename);
 
 signals:
     void hasVideoChanged(bool videoAvailable);
     void mediaObjectChanged();
+    void durationChanged();
+    void positionChanged();
     
 private:
     QMediaPlaylist *m_playlist;

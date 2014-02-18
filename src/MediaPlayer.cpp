@@ -11,6 +11,8 @@ MediaPlayer::MediaPlayer(QObject *parent) :
     m_player(new QMediaPlayer(this))
 {
     connect(m_player, &QMediaPlayer::videoAvailableChanged, this, &MediaPlayer::hasVideoChanged);
+    connect(m_player, &QMediaPlayer::positionChanged, this, &MediaPlayer::positionChanged);
+    connect(m_player, &QMediaPlayer::durationChanged, this, &MediaPlayer::durationChanged);
     m_player->setVolume(0);
 }
 
@@ -24,9 +26,29 @@ QMediaPlayer *MediaPlayer::mediaObject() const
     return m_player;
 }
 
+qint64 MediaPlayer::duration() const
+{
+    return m_player->duration();
+}
+
+qint64 MediaPlayer::position() const
+{
+    return m_player->position();
+}
+
+void MediaPlayer::setPosition(qint64 position)
+{
+    m_player->setPosition(position);
+}
+
 void MediaPlayer::stop()
 {
     m_player->stop();
+}
+
+void MediaPlayer::pause()
+{
+    m_player->pause();
 }
 
 void MediaPlayer::nextClip()

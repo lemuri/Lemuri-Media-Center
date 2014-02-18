@@ -26,8 +26,8 @@ set(lmc_SRCS
     KeyManager.cpp
     ScreenSaver.cpp
     DBusInterface.cpp
-    MediaPlayer.cpp
     MediaCenter.cpp
+    mimefileresolver.cpp
     main.cpp
 )
 

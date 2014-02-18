@@ -56,10 +56,10 @@ Item {
             width: GridView.view.cellWidth
         }
         cellWidth: Backend.coverSize
-        cellHeight: cellWidth
+        cellHeight: cellWidth * 1.5
         keyNavigationWraps: true
-        preferredHighlightBegin: parent.height * 0.5 - cellWidth / 2
-        preferredHighlightEnd: parent.height * 0.5 - cellWidth / 2
+        preferredHighlightBegin: parent.height * 0.5 - cellHeight / 2
+        preferredHighlightEnd: parent.height * 0.5 - cellHeight / 2
         highlightRangeMode: GridView.StrictlyEnforceRange
         highlightMoveDuration: settings.animations ? 300 : 0
         cacheBuffer: 5000

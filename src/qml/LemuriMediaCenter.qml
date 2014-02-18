@@ -6,12 +6,6 @@ FocusScope {
     property bool showingVideo: Backend.showVideo && mediaView.hasVideo && !Backend.configuring
     state: showingVideo ? "VIDEO" : "MEDIA"
 
-    onVisibleChanged: {
-        if (visible) {
-            Player.start()
-        }
-    }
-
     Media {
         id: mediaSelector
         visible: false

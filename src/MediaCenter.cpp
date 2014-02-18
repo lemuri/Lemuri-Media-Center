@@ -4,7 +4,6 @@
 #include "MusicImporter.h"
 #include "BackgroundModel.h"
 #include "PlayerAndModel.h"
-#include "MediaPlayer.h"
 #include "CoverProvider.h"
 #include "KeyManager.h"
 #include "IconProvider.h"
@@ -78,12 +77,7 @@ MediaCenter::MediaCenter() :
     m_view->installEventFilter(m_keyManager);
 
     m_playerModel = new PlayerAndModel(this);
-    m_playerModel->setPlaybackMode(QMediaPlaylist::Sequential);
-    m_playerModel->setUseCrypt(true);
-    m_playerModel->setAutoplay(true);
     m_playerModel->setVolume(volume());
-//    connect(m_playerModel, &PlayerAndModel::hasVideoChanged, this, &MediaCenter::paidMediaChanged);
-//    connect(m_playerModel, &PlayerAndModel::playingChanged, this, &MediaCenter::paidMediaChanged);
     connect(m_playerModel, &PlayerAndModel::notification, this, &MediaCenter::notification);
     connect(this, SIGNAL(volumeChanged(int)), m_playerModel, SLOT(setVolume(int)));
 
@@ -255,11 +249,6 @@ void MediaCenter::hideVideo()
     m_showVideoTimer->start();
 }
 
-void MediaCenter::clearPlayingList()
-{
-    m_playerModel->clear();
-}
-
 QStringList MediaCenter::genreFilters() const
 {
     return m_genreFilters;
@@ -380,11 +369,6 @@ void MediaCenter::close()
 {
     m_view->close();
     QCoreApplication::quit();
-}
-
-void MediaCenter::nextMedia()
-{
-    m_playerModel->next();
 }
 
 void MediaCenter::createMediaFolders()

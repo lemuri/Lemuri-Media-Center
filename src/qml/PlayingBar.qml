@@ -67,7 +67,6 @@ Item {
             anchors.right: parent.right
             anchors.verticalCenter: parent.verticalCenter
             orientation: ListView.Horizontal
-            model: Player
             delegate: mediaDelegate
             spacing: 5
             onCurrentItemChanged: {

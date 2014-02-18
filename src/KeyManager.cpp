@@ -19,8 +19,6 @@
 #define KEY_CHOOSE_CD_D     Qt::Key_I
 #define KEY_PLAY_MEDIA     "Keys/PlayMedia"
 #define KEY_PLAY_MEDIA_D    Qt::Key_O
-#define KEY_CANCEL_MEDIA   "Keys/CancelMedia"
-#define KEY_CANCEL_MEDIA_D  Qt::Key_U
 
 #define KEY_VOLUME          "Keys/Volume"
 #define KEY_VOLUME_D         Qt::Key_P
@@ -44,7 +42,6 @@ KeyManager::KeyManager(MediaCenter *parent) :
 
     m_keyChooseAlbum = settings.value(QLatin1String(KEY_CHOOSE_CD),    KEY_CHOOSE_CD_D).toInt();
     m_keyPlayMedia   = settings.value(QLatin1String(KEY_PLAY_MEDIA),   KEY_PLAY_MEDIA_D).toInt();
-    m_keyCancelMedia = settings.value(QLatin1String(KEY_CANCEL_MEDIA), KEY_CANCEL_MEDIA_D).toInt();
 
     m_keyVolume       = settings.value(QLatin1String(KEY_VOLUME),        KEY_VOLUME_D).toInt();
     m_keyConfigure    = settings.value(QLatin1String(KEY_CONFIGURE),     KEY_CONFIGURE_D).toInt();
@@ -156,22 +153,6 @@ void KeyManager::setKeyPlayMedia(int key)
         int value = saveKey(QLatin1String(KEY_PLAY_MEDIA), key);
         if (value != -1) {
             m_keyPlayMedia = value;
-            emit keysChanged();
-        }
-    }
-}
-
-int KeyManager::keyCancelMedia() const
-{
-    return m_keyCancelMedia;
-}
-
-void KeyManager::setKeyCancelMedia(int key)
-{
-    if (m_keyCancelMedia != key) {
-        int value = saveKey(QLatin1String(KEY_CANCEL_MEDIA), key);
-        if (value != -1) {
-            m_keyCancelMedia = value;
             emit keysChanged();
         }
     }
@@ -316,9 +297,6 @@ bool KeyManager::eventFilter(QObject *watched, QEvent *event)
     } else if (keyEvent->key() == m_keyLeave) {
         m_mediaCenter->close();
         return true;
-    } else if (keyEvent->key() == m_keyCancelMedia) {
-        m_mediaCenter->nextMedia();
-        return true;
     }
 
     return QObject::eventFilter(watched, event);
@@ -355,7 +333,6 @@ QHash<QString, int> KeyManager::currentKeys() const
 
     keys[QLatin1String(KEY_CHOOSE_CD)]    = m_keyChooseAlbum;
     keys[QLatin1String(KEY_PLAY_MEDIA)]   = m_keyPlayMedia;
-    keys[QLatin1String(KEY_CANCEL_MEDIA)] = m_keyCancelMedia;
 
     keys[QLatin1String(KEY_VOLUME)]        = m_keyVolume;
     keys[QLatin1String(KEY_CONFIGURE)]     = m_keyConfigure;

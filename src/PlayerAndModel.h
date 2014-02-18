@@ -6,81 +6,58 @@
 #include <QMediaPlaylist>
 #include <QFile>
 
-class PlayerAndModel : public QAbstractItemModel
+class PlayerAndModel : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(int count READ rowCount NOTIFY countChanged)
-    Q_PROPERTY(bool playing READ playing WRITE setPlaying NOTIFY playingChanged)
+    Q_PROPERTY(int state READ state NOTIFY stateChanged)
     Q_PROPERTY(bool hasVideo READ hasVideo NOTIFY hasVideoChanged)
+    Q_PROPERTY(qint64 duration READ duration NOTIFY durationChanged)
+    Q_PROPERTY(qint64 position READ position WRITE setPosition NOTIFY positionChanged)
     Q_PROPERTY(QObject* mediaObject READ mediaObject NOTIFY mediaObjectChanged)
 public:
-    enum Column
+    enum State
     {
-        Title = 0,
-        ColumnCount
+        Playing,
+        Paused,
+        Stopped
     };
     explicit PlayerAndModel(QObject *parent = 0);
 
-    void setPlaybackMode(QMediaPlaylist::PlaybackMode mode);
-    bool playing() const;
-    void setPlaying(bool playing);
+    State state() const;
     bool hasVideo() const;
+
+    qint64 duration() const;
+
+    qint64 position() const;
+    void setPosition(qint64 position);
+
     QObject* mediaObject() const;
-    void setAutoplay(bool autoplay);
-    void setUseCrypt(bool use);
-    void shuffle();
-    void clear();
 
 public slots:
     void setVolume(int volume);
 
-    void start();
+    void play();
+    void pause();
     void stop();
-    void next();
     bool addMedia(const QString &filename);
 
-public:
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const;
-
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
-    QModelIndex parent(const QModelIndex &child) const;
-
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    virtual QHash<int, QByteArray> roleNames() const;
-
-    QMediaPlaylist *playlist() const;
-    void setPlaylist(QMediaPlaylist *playlist);
-
 signals:
-    void countChanged();
     void notification(const QString &message);
     void hasVideoChanged(bool videoAvailable);
     void mediaObjectChanged();
-    void playingChanged();
+    void stateChanged();
+    void durationChanged();
+    void positionChanged();
 
 private slots:
-    void stateChanged(QMediaPlayer::State newState);
+    void mediaStateChanged(QMediaPlayer::State newState);
     void error(QMediaPlayer::Error error);
-    void beginInsertItems(int start, int end);
-    void endInsertItems();
-    void beginRemoveItems(int start, int end);
-    void endRemoveItems();
-    void changeItems(int start, int end);
-    void savePlaylist();
-    void loadPlaylist();
 
 private:
-    void removeCurrent();
-
-    QMediaPlaylist *m_playlist;
     QMediaPlayer *m_player;
-    QHash<int, QByteArray> m_roleNames;
     QFile *m_currentFile;
-    bool m_autoplay;
-    bool m_useCrypt;
-    bool m_stop;
     int m_volume;
+    State m_state;
 };
 
 #endif // PLAYER_AND_MODEL_H

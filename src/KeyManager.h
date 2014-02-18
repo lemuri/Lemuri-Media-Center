@@ -39,10 +39,6 @@ public:
     int keyPlayMedia() const;
     void setKeyPlayMedia(int key);
 
-    Q_PROPERTY(int keyCancelMedia READ keyCancelMedia WRITE setKeyCancelMedia NOTIFY keysChanged)
-    int keyCancelMedia() const;
-    void setKeyCancelMedia(int key);
-
 
     Q_PROPERTY(int keyVolume READ keyVolume WRITE setKeyVolume NOTIFY keysChanged)
     int keyVolume() const;
@@ -79,7 +75,6 @@ private:
     int m_keyLeave;
     int m_keyChooseAlbum;
     int m_keyPlayMedia;
-    int m_keyCancelMedia;
     int m_keyVolume;
     int m_keyConfigure;
     int m_keyFullscreen;
