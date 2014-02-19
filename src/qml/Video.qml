@@ -16,12 +16,6 @@ Rectangle {
         anchors.fill: parent
     }
 
-    PlayingBar {
-        anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.right: parent.right
-    }
-
     MouseArea {
         id: mouseArea
         anchors.fill: parent
@@ -31,6 +25,21 @@ Rectangle {
             hideCursorTimer.start()
         }
         onDoubleClicked: Backend.fullScreen = !Backend.fullScreen
+    }
+
+    PlayingBar {
+        id: playingBar
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.right: parent.right
+        visible: Backend.showCursor
+        onHoveredChanged: {
+            if (hovered) {
+                hideCursorTimer.stop()
+            } else {
+                hideCursorTimer.start()
+            }
+        }
     }
 
     Timer {
@@ -44,7 +53,9 @@ Rectangle {
     Keys.onEscapePressed: mediaPlayer.stop()
 
     Keys.onRightPressed: {
+        console.debug("RIGHT pos1: " + mediaPlayer.position)
         mediaPlayer.position = mediaPlayer.position + 5000
+        console.debug("RIGHT pos2: " + mediaPlayer.position)
     }
 
     Keys.onLeftPressed: {
