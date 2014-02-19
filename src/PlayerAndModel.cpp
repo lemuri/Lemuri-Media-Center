@@ -49,9 +49,9 @@ void PlayerAndModel::setPosition(qint64 position)
     m_player->setPosition(position);
 }
 
-QObject *PlayerAndModel::mediaObject() const
+int PlayerAndModel::volume() const
 {
-    return m_player;
+    return m_volume;
 }
 
 void PlayerAndModel::setVolume(int volume)
@@ -59,7 +59,13 @@ void PlayerAndModel::setVolume(int volume)
     if (m_volume != volume) {
         m_volume = volume;
         m_player->setVolume(m_volume);
+        emit volumeChanged();
     }
+}
+
+QObject *PlayerAndModel::mediaObject() const
+{
+    return m_player;
 }
 
 void PlayerAndModel::play()
@@ -128,7 +134,7 @@ bool PlayerAndModel::addMedia(const QString &filename)
 
 void PlayerAndModel::mediaStateChanged(QMediaPlayer::State newState)
 {
-    qDebug() << "mediaStateChanged" << newState;
+    qDebug() << "mediaStateChanged" << newState << hasVideo();
     switch (newState) {
     case QMediaPlayer::PlayingState:
         m_state = Playing;

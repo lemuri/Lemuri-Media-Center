@@ -74,6 +74,11 @@ Item {
         visible: mediaCenter.visible
     }
 
+    MediaPlayer {
+        id: mediaPlayer
+        volume: Backend.volume
+    }
+
     Volume {
         id: volume
     }

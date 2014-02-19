@@ -84,12 +84,12 @@ MediaCenter::MediaCenter() :
     qmlRegisterType<GenreModel>("MediaCenter", 1, 0, "GenreModel");
     qmlRegisterType<AlbumModel>("MediaCenter", 1, 0, "AlbumModel");
     qmlRegisterType<TracksModel>("MediaCenter", 1, 0, "TracksModel");
-    qmlRegisterType<PlayerAndModel>("MediaCenter", 1, 0, "PlayerAndModel");
+    qmlRegisterType<PlayerAndModel>("MediaCenter", 1, 0, "MediaPlayer");
 
     m_view->rootContext()->setContextProperty(QLatin1String("Backend"), this);
     m_view->rootContext()->setContextProperty(QLatin1String("KeyManager"), m_keyManager);
     m_view->rootContext()->setContextProperty(QLatin1String("BackgroundModel"), new BackgroundModel(this));
-    m_view->rootContext()->setContextProperty(QLatin1String("Player"),  m_playerModel);
+//    m_view->rootContext()->setContextProperty(QLatin1String("MediaPlayer"),  m_playerModel);
 
     m_view->engine()->addImageProvider(QLatin1String("icon"), new IconProvider);
     m_view->engine()->addImageProvider(QLatin1String("cover"), new CoverProvider);

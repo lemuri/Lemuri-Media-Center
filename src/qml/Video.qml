@@ -5,24 +5,26 @@ import MediaCenter 1.0
 Rectangle {
     id: root
     color: "#000"
+
     focus: true
 
-    property bool hasVideo: Player.state === PlayerAndModel.Playing && Player.hasVideo
+    property bool shouldShow: (mediaPlayer.state == 0 || mediaPlayer.state == 1) && mediaPlayer.hasVideo
 
     VideoOutput {
         id: videoOutput
-        visible: Player.hasVideo
-        source: Player
+        source: mediaPlayer
         anchors.fill: parent
     }
 
-    Keys.onSpacePressed: Player.playing ? Player.pause() : Player.play()
+    Keys.onSpacePressed: mediaPlayer.state == 0 ? mediaPlayer.pause() : mediaPlayer.play()
+
+    Keys.onEscapePressed: mediaPlayer.stop()
 
     Keys.onRightPressed: {
-        Player.position = Player.position + 5000
+        mediaPlayer.position = mediaPlayer.position + 5000
     }
 
     Keys.onLeftPressed: {
-        Player.position = Player.position - 5000
+        mediaPlayer.position = mediaPlayer.position - 5000
     }
 }

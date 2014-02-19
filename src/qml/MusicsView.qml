@@ -71,7 +71,7 @@ AnimatedDialog {
     function play(space, event) {
         var currentItem = listView.currentItem
         if (space && currentItem) {
-            if (!Backend.playMedia(currentItem.filePath, currentItem.title, currentItem.artist, "", "")) {
+            if (!mediaPlayer.addMedia(currentItem.filePath)) {
                 event.accepted = true
                 return
             }

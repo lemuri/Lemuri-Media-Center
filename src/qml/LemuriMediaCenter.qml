@@ -3,8 +3,7 @@ import QtQuick 2.1
 FocusScope {
     id: root
 
-    property bool showingVideo: Backend.showVideo && mediaView.hasVideo && !Backend.configuring
-    state: showingVideo ? "VIDEO" : "MEDIA"
+    state: mediaView.shouldShow ? "VIDEO" : "MEDIA"
 
     Media {
         id: mediaSelector

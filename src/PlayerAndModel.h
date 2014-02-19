@@ -9,10 +9,12 @@
 class PlayerAndModel : public QObject
 {
     Q_OBJECT
+    Q_ENUMS(State)
     Q_PROPERTY(int state READ state NOTIFY stateChanged)
     Q_PROPERTY(bool hasVideo READ hasVideo NOTIFY hasVideoChanged)
     Q_PROPERTY(qint64 duration READ duration NOTIFY durationChanged)
     Q_PROPERTY(qint64 position READ position WRITE setPosition NOTIFY positionChanged)
+    Q_PROPERTY(int volume READ volume WRITE setVolume NOTIFY volumeChanged)
     Q_PROPERTY(QObject* mediaObject READ mediaObject NOTIFY mediaObjectChanged)
 public:
     enum State
@@ -31,10 +33,12 @@ public:
     qint64 position() const;
     void setPosition(qint64 position);
 
+    int volume() const;
+    void setVolume(int volume);
+
     QObject* mediaObject() const;
 
 public slots:
-    void setVolume(int volume);
 
     void play();
     void pause();
@@ -48,6 +52,7 @@ signals:
     void stateChanged();
     void durationChanged();
     void positionChanged();
+    void volumeChanged();
 
 private slots:
     void mediaStateChanged(QMediaPlayer::State newState);
