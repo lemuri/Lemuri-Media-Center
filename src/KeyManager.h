@@ -77,7 +77,6 @@ private:
     int m_keyPlayMedia;
     int m_keyVolume;
     int m_keyConfigure;
-    int m_keyFullscreen;
 };
 
 #endif // KEYMANAGER_H

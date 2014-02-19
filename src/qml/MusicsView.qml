@@ -51,7 +51,15 @@ AnimatedDialog {
                 id: tracksModel
                 genreFilters: Backend.genreFilters
             }
-            delegate: MusicDelegate {}
+            delegate: MusicDelegate {
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        listView.currentIndex = index
+                        mediaPlayer.addMedia(filePath)
+                    }
+                }
+            }
             onCountChanged: currentIndex = 0
 
             Component.onCompleted: Backend.indexChanged.connect(load)

@@ -26,8 +26,6 @@
 #define KEY_CONFIGURE_D      Qt::Key_X
 #define KEY_LEAVE           "Keys/Leave"
 #define KEY_LEAVE_D          Qt::Key_L
-#define KEY_FULL_SCREEN     "Keys/FullScreen"
-#define KEY_FULL_SCREEN_D    Qt::Key_F
 
 KeyManager::KeyManager(MediaCenter *parent) :
     QObject(parent),
@@ -46,7 +44,6 @@ KeyManager::KeyManager(MediaCenter *parent) :
     m_keyVolume       = settings.value(QLatin1String(KEY_VOLUME),        KEY_VOLUME_D).toInt();
     m_keyConfigure    = settings.value(QLatin1String(KEY_CONFIGURE),     KEY_CONFIGURE_D).toInt();
     m_keyLeave        = settings.value(QLatin1String(KEY_LEAVE),         KEY_LEAVE_D).toInt();
-    m_keyFullscreen   = settings.value(QLatin1String(KEY_FULL_SCREEN),   KEY_FULL_SCREEN_D).toInt();
 }
 
 bool KeyManager::filterKeys() const
@@ -225,58 +222,38 @@ bool KeyManager::eventFilter(QObject *watched, QEvent *event)
     }
 
     QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
-    if (m_mediaCenter->configuring()) {
-        if (keyEvent->key() == m_keyDown) {
-            QKeyEvent pressEvent(QEvent::KeyPress, Qt::Key_Tab, Qt::NoModifier);
-            QApplication::sendEvent(watched, &pressEvent);
-            return true;
-        } else if (keyEvent->key() == m_keyUp) {
-            QKeyEvent pressEvent(QEvent::KeyPress, Qt::Key_Tab, Qt::ShiftModifier);
-            QApplication::sendEvent(watched, &pressEvent);
-            return true;
-        } else if (keyEvent->key() == m_keyRight) {
-            QKeyEvent pressEvent(QEvent::KeyPress, Qt::Key_Plus, Qt::NoModifier);
-            QApplication::sendEvent(watched, &pressEvent);
-            return true;
-        } else if (keyEvent->key() == m_keyLeft) {
-            QKeyEvent pressEvent(QEvent::KeyPress, Qt::Key_Minus, Qt::NoModifier);
-            QApplication::sendEvent(watched, &pressEvent);
-            return true;
-        }
-    } else {
-        if (keyEvent->key() == m_keyDown) {
-            QKeyEvent pressEvent(QEvent::KeyPress,
-                                 Qt::Key_Down,
-                                 Qt::NoModifier,
-                                 QString(),
-                                 keyEvent->isAutoRepeat());
-            QApplication::sendEvent(watched, &pressEvent);
-            return true;
-        } else if (keyEvent->key() == m_keyUp) {
-            QKeyEvent pressEvent(QEvent::KeyPress,
-                                 Qt::Key_Up,
-                                 Qt::NoModifier,
-                                 QString(),
-                                 keyEvent->isAutoRepeat());
-            QApplication::sendEvent(watched, &pressEvent);
-            return true;
-        } else if (keyEvent->key() == m_keyRight) {
-            QKeyEvent pressEvent(QEvent::KeyPress,
-                                 Qt::Key_Right,
-                                 Qt::NoModifier,
-                                 QString(),
-                                 keyEvent->isAutoRepeat());
-            QApplication::sendEvent(watched, &pressEvent);
-            return true;
-        } else if (keyEvent->key() == m_keyLeft) {
-            QKeyEvent pressEvent(QEvent::KeyPress,
-                                 Qt::Key_Left,
-                                 Qt::NoModifier,
-                                 QString(),
-                                 keyEvent->isAutoRepeat());
-            QApplication::sendEvent(watched, &pressEvent);
-            return true;
-        }
+    if (keyEvent->key() == m_keyDown) {
+        QKeyEvent pressEvent(QEvent::KeyPress,
+                             Qt::Key_Down,
+                             Qt::NoModifier,
+                             QString(),
+                             keyEvent->isAutoRepeat());
+        QApplication::sendEvent(watched, &pressEvent);
+        return true;
+    } else if (keyEvent->key() == m_keyUp) {
+        QKeyEvent pressEvent(QEvent::KeyPress,
+                             Qt::Key_Up,
+                             Qt::NoModifier,
+                             QString(),
+                             keyEvent->isAutoRepeat());
+        QApplication::sendEvent(watched, &pressEvent);
+        return true;
+    } else if (keyEvent->key() == m_keyRight) {
+        QKeyEvent pressEvent(QEvent::KeyPress,
+                             Qt::Key_Right,
+                             Qt::NoModifier,
+                             QString(),
+                             keyEvent->isAutoRepeat());
+        QApplication::sendEvent(watched, &pressEvent);
+        return true;
+    } else if (keyEvent->key() == m_keyLeft) {
+        QKeyEvent pressEvent(QEvent::KeyPress,
+                             Qt::Key_Left,
+                             Qt::NoModifier,
+                             QString(),
+                             keyEvent->isAutoRepeat());
+        QApplication::sendEvent(watched, &pressEvent);
+        return true;
     }
 
     if (keyEvent->key() == m_keyChooseAlbum) {
@@ -290,9 +267,6 @@ bool KeyManager::eventFilter(QObject *watched, QEvent *event)
         QApplication::sendEvent(watched, &pressEvent);
         QKeyEvent releaseEvent(QEvent::KeyRelease, Qt::Key_Space, Qt::NoModifier);
         QApplication::sendEvent(watched, &releaseEvent);
-        return true;
-    } else if (keyEvent->key() == m_keyFullscreen) {
-        m_mediaCenter->setShowFullScreen(!m_mediaCenter->showFullScreen());
         return true;
     } else if (keyEvent->key() == m_keyLeave) {
         m_mediaCenter->close();
@@ -337,7 +311,6 @@ QHash<QString, int> KeyManager::currentKeys() const
     keys[QLatin1String(KEY_VOLUME)]        = m_keyVolume;
     keys[QLatin1String(KEY_CONFIGURE)]     = m_keyConfigure;
     keys[QLatin1String(KEY_LEAVE)]         = m_keyLeave;
-    keys[QLatin1String(KEY_FULL_SCREEN)]   = m_keyFullscreen;
 
     return keys;
 }

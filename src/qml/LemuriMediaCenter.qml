@@ -27,6 +27,7 @@ FocusScope {
             name: "VIDEO"
             PropertyChanges { target: mediaView; visible: true}
             PropertyChanges { target: mediaView; focus: true}
+            PropertyChanges { target: Backend; showCursor: false }
         }
     ]
 }

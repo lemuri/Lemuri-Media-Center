@@ -16,6 +16,29 @@ Rectangle {
         anchors.fill: parent
     }
 
+    PlayingBar {
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.right: parent.right
+    }
+
+    MouseArea {
+        id: mouseArea
+        anchors.fill: parent
+        hoverEnabled: true
+        onPositionChanged: {
+            Backend.showCursor = true
+            hideCursorTimer.start()
+        }
+        onDoubleClicked: Backend.fullScreen = !Backend.fullScreen
+    }
+
+    Timer {
+        id: hideCursorTimer
+        interval: 5000
+        onTriggered: Backend.showCursor = false
+    }
+
     Keys.onSpacePressed: mediaPlayer.state == 0 ? mediaPlayer.pause() : mediaPlayer.play()
 
     Keys.onEscapePressed: mediaPlayer.stop()

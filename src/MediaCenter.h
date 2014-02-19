@@ -17,8 +17,8 @@ class MediaCenter : public QObject
     Q_PROPERTY(int volume READ volume NOTIFY volumeChanged)
     Q_PROPERTY(int coverSize READ coverSize WRITE setCoverSize NOTIFY coverSizeChanged)
     Q_PROPERTY(bool showVideo READ showVideo NOTIFY showVideoChanged)
-    Q_PROPERTY(bool configuring READ configuring WRITE setConfiguring NOTIFY configuringChanged)
-    Q_PROPERTY(bool showFullScreen READ showFullScreen WRITE setShowFullScreen NOTIFY showFullScreenChanged)
+    Q_PROPERTY(bool showCursor READ showCursor WRITE setShowCursor NOTIFY showCursorChanged)
+    Q_PROPERTY(bool fullScreen READ fullScreen WRITE setFullScreen NOTIFY fullScreenChanged)
     Q_PROPERTY(QStringList genreFilters READ genreFilters WRITE setGenreFilters NOTIFY genreFiltersChanged)
     Q_PROPERTY(QString version READ version)
 public:
@@ -38,10 +38,10 @@ public:
     void setCoverSize(int coverSize);
     bool showVideo() const;
     void showVideoStart();
-    bool configuring() const;
-    void setConfiguring(bool configuring);
-    bool showFullScreen() const;
-    void setShowFullScreen(bool showFullScreen);
+    bool showCursor() const;
+    void setShowCursor(bool showCursor);
+    bool fullScreen() const;
+    void setFullScreen(bool fullScreen);
     KeyManager* keyManager() const;
 
     Q_INVOKABLE void increaseVolume();
@@ -72,8 +72,8 @@ public:
 signals:
     void indexReadyChanged();
     void indexChanged();
-    void configuringChanged();
-    void showFullScreenChanged();
+    void showCursorChanged();
+    void fullScreenChanged();
     void volumeChanged(int volume);
     void coverSizeChanged(int size);
     void showVideoChanged();
@@ -106,7 +106,7 @@ private:
     KeyManager *m_keyManager;
     bool m_indexReady;
     bool m_showVideo;
-    bool m_configuring;
+    bool m_showCursor = true;
     bool m_showFullScreen;
     int m_volume;
     int m_coverSize;

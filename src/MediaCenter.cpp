@@ -41,7 +41,6 @@ MediaCenter::MediaCenter() :
     m_genreFiltersChanged(false),
     m_indexReady(false),
     m_showVideo(true),
-    m_configuring(false),
     m_keyManager(new KeyManager(this))
 {
     m_volume = config(GUI_VOLUME, 100);
@@ -171,39 +170,36 @@ void MediaCenter::showVideoStart()
     m_showVideoTimer->start();
 }
 
-bool MediaCenter::configuring() const
+bool MediaCenter::showCursor() const
 {
-    return m_configuring;
+    return m_showCursor;
 }
 
-void MediaCenter::setConfiguring(bool configuring)
+void MediaCenter::setShowCursor(bool showCursor)
 {
-    if (m_configuring != configuring) {
-        m_configuring = configuring;
-        if (configuring) {
+    if (m_showCursor != showCursor) {
+        m_showCursor = showCursor;
+        if (showCursor) {
             m_view->setCursor(Qt::ArrowCursor);
         } else {
             m_view->setCursor(Qt::BlankCursor);
-            if (m_genreFiltersChanged) {
-                emit genreFiltersChanged();
-            }
         }
-        emit configuringChanged();
+        emit showCursorChanged();
     }
 }
 
-bool MediaCenter::showFullScreen() const
+bool MediaCenter::fullScreen() const
 {
     return m_showFullScreen;
 }
 
-void MediaCenter::setShowFullScreen(bool showFullScreen)
+void MediaCenter::setFullScreen(bool showFullScreen)
 {
     if (m_showFullScreen != showFullScreen) {
         m_showFullScreen = showFullScreen;
         setConfig(GUI_SHOW_FULLSCREEN, showFullScreen);
         show();
-        emit showFullScreenChanged();
+        emit fullScreenChanged();
     }
 }
 
@@ -265,7 +261,7 @@ void MediaCenter::setGenreFilters(const QStringList &genreFilters)
         QSettings settings;
         settings.setValue(QLatin1String(CORE_GENRE_FILTERS), genresFixed);
         m_genreFilters = genresFixed;
-        if (m_configuring) {
+        if (m_showCursor) {
             m_genreFiltersChanged = true;
         } else {
             m_genreFiltersChanged = false;
@@ -359,7 +355,7 @@ void MediaCenter::indexFinished()
 
 void MediaCenter::showVideoTimeout()
 {
-    if (!m_showVideo && !m_configuring) {
+    if (!m_showVideo && !m_showCursor) {
         m_showVideo = true;
         emit showVideoChanged();
     }

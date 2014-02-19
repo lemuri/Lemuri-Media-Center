@@ -15,7 +15,7 @@ Item {
         id: background
         opacity: 0.5
         anchors.fill: parent
-        barAnchors.topMargin: 10
+        barAnchors.bottomMargin: 10
     }
 
     Component {

@@ -54,6 +54,13 @@ Item {
         delegate: AlbumDelegate {
             height: GridView.view.cellHeight
             width: GridView.view.cellWidth
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    gridView.currentIndex = index
+                    showCover()
+                }
+            }
         }
         cellWidth: Backend.coverSize
         cellHeight: cellWidth * 1.5
@@ -95,12 +102,10 @@ Item {
 
     Keys.onLeftPressed: {
         gridView.moveCurrentIndexLeft()
-        countAutoRepeat(event)
     }
 
     Keys.onRightPressed: {
         gridView.moveCurrentIndexRight()
-        countAutoRepeat(event)
     }
 
     Keys.onDownPressed: {
