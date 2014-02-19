@@ -53,7 +53,7 @@ private:
     void commit();
     bool hasDocument(const QString &uniqueId);
     bool addFile(const QFileInfo &fileInfo, const QString &uuid = QString());
-    void createCoverFile(const QString &absolutePath, const QString &destFilePath);
+    void createCoverFile(const QString &absolutePath, const QString &title);
     void checkMediaCountChanged(quint64 &mediaCount);
     static QString movieSection(const QString &absolutePath);
 

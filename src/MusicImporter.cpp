@@ -14,6 +14,15 @@
 #include <QDebug>
 #include <QImage>
 
+#include <QNetworkAccessManager>
+#include <QUrl>
+#include <QUrlQuery>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+
 #include <fileref.h>
 #include <tag.h>
 
@@ -289,7 +298,7 @@ bool MusicImporter::addFile(const QFileInfo &fileInfo, const QString &uuid)
     try {
         // It's said that adding the docs sorted is faster.. (change in future)
         m_rwXapianDB->replace_document(id.toStdString(), document);
-        qDebug() << fileInfo.absoluteFilePath() << 4;
+        createCoverFile(fileInfo.dir().path(), title);
 
         return true;
     } catch (const Xapian::Error &error) {
@@ -299,7 +308,7 @@ bool MusicImporter::addFile(const QFileInfo &fileInfo, const QString &uuid)
     }
 }
 
-void MusicImporter::createCoverFile(const QString &absolutePath, const QString &destFilePath)
+void MusicImporter::createCoverFile(const QString &absolutePath, const QString &title)
 {
     QStringList nameFilters;
     nameFilters << QLatin1String("*.png");
@@ -309,6 +318,7 @@ void MusicImporter::createCoverFile(const QString &absolutePath, const QString &
 
     QFileInfoList infoList;
 
+    bool localFound = false;
     QDir dir(absolutePath);
     infoList = dir.entryInfoList(nameFilters,
                                  QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot,
@@ -317,9 +327,70 @@ void MusicImporter::createCoverFile(const QString &absolutePath, const QString &
         const QString &absoluteFilePath = fileInfo.absoluteFilePath();
         QImage image(fileInfo.absoluteFilePath());
         if (image.format() != QImage::Format_Invalid &&
-                QFile::copy(absoluteFilePath, destFilePath)) {
+                QFile::copy(absoluteFilePath, MediaCenter::coverPath(absolutePath))) {
+            localFound = true;
             break;
         }
+    }
+
+    if (localFound) {
+        return;
+    }
+
+    QNetworkAccessManager nam;
+    QUrl url("https://api.themoviedb.org/3/search/movie");
+    QUrlQuery query;
+    query.addQueryItem(QLatin1String("api_key"), QLatin1String("3e4b22d9919ae1fcaada321737e19dba"));
+    query.addQueryItem(QLatin1String("query"), title);
+    query.addQueryItem(QLatin1String("language"), QLatin1String("pt_BR"));
+    url.setQuery(query);
+
+    qDebug() << url << url.toString();
+    QNetworkRequest req(url);
+    req.setRawHeader("Accept", "application/json");
+
+    QNetworkReply *reply = nam.get(req);
+    QEventLoop loop;
+    connect(reply, &QNetworkReply::finished,
+            &loop, &QEventLoop::quit);
+    loop.exec();
+
+    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+    if (document.isNull()) {
+        qDebug() << "Null document for" << title;
+        return;
+    }
+
+//    document.object()["results"]
+    QJsonArray array = document.object()["results"].toArray();
+    if (array.isEmpty()) {
+        qDebug() << "Null array for" << title;
+        return;
+    }
+
+    QString posterPath = array.first().toObject()["poster_path"].toString();
+    if (!posterPath.isEmpty()) {
+        QUrl urlImg("http://image.tmdb.org/t/p/w500/" % posterPath);
+        QNetworkRequest reqImg(urlImg);
+        QNetworkReply *replyImg = nam.get(reqImg);
+        QEventLoop loop;
+        connect(replyImg, &QNetworkReply::finished,
+                &loop, &QEventLoop::quit);
+        loop.exec();
+
+        if (replyImg->error()) {
+            qDebug() << replyImg->errorString();
+            return;
+        }
+
+        QFile imgFile(MediaCenter::coverPath(absolutePath));
+        if (imgFile.open(QFile::ReadWrite)) {
+            imgFile.write(replyImg->readAll());
+        } else {
+            qDebug() << "Failed to open" << imgFile.fileName();
+        }
+    } else {
+        qDebug() << "Null results for" << title;
     }
 }
 
