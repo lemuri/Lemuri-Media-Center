@@ -18,9 +18,10 @@ FocusScope {
             anchors.fill: parent
             startsWithFilter: filterBar.startsWithFilter
             onChooseCD: {
-                musicView.album = title
-                musicView.absolutePath = absolutePath
-                root.state = "MEDIA"
+//                musicView.album = title
+//                musicView.absolutePath = absolutePath
+//                root.state = "MEDIA"
+                mediaPlayer.addMedia(absolutePath)
             }
             onShowFilterBar: root.state = "FILTER"
         }
