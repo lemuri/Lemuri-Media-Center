@@ -5,20 +5,20 @@ FocusScope {
 
     Background {
         anchors.fill: parent
-        source: albumSelector.absolutePath
+        source: moviesSelector.absolutePath
     }
 
     Item {
         id: mainViewArea
         anchors.fill: parent
 
-        AlbumSelector {
-            id: albumSelector
+        MoviesSelector {
+            id: moviesSelector
             focus: true
             anchors.fill: parent
             startsWithFilter: filterBar.startsWithFilter
             onChooseCD: {
-                musicView.album = album
+                musicView.album = title
                 musicView.absolutePath = absolutePath
                 root.state = "MEDIA"
             }
@@ -37,7 +37,7 @@ FocusScope {
 
         Row {
             id: topBar
-            height: artistAlbumGrid.height + spacing * 2
+            height: titleLabel.contentHeight + spacing * 2
             anchors.left: topBackground.left
             anchors.top: topBackground.top
             anchors.right: topBackground.right
@@ -45,55 +45,17 @@ FocusScope {
             anchors.rightMargin: spacing
             spacing: 4
 
-            Grid {
-                id: artistAlbumGrid
-                anchors.verticalCenter: parent.verticalCenter
-                columns: 2
-                rows: 2
-                spacing: 4
-                width: parent.width - parent.spacing
-                property int leftColSize: Math.max(artistL.contentWidth, albumL.contentWidth)
-
-                Text {
-                    id: artistL
-                    width: artistAlbumGrid.leftColSize
-                    horizontalAlignment: Text.AlignRight
-                    visible: albumSelector.artist.length
-                    font.pointSize: settings.fontS
-                    color: settings.fontColorActive
-                    style: Text.Raised
-                    styleColor: settings.fontShadowColor
-                    text: "Artista:"
-                }
-                Text {
-                    font.pointSize: settings.fontS
-                    width: parent.width - artistAlbumGrid.leftColSize
-                    elide: Text.ElideRight
-                    color: settings.fontColorActive
-                    style: Text.Raised
-                    styleColor: settings.fontShadowColor
-                    text: albumSelector.artist
-                }
-                Text {
-                    id: albumL
-                    width: artistAlbumGrid.leftColSize
-                    horizontalAlignment: Text.AlignRight
-                    visible: albumSelector.album.length
-                    font.pointSize: settings.fontS
-                    color: settings.fontColorActive
-                    style: Text.Raised
-                    styleColor: settings.fontShadowColor
-                    text: "Álbum:"
-                }
-                Text {
-                    font.pointSize: settings.fontS
-                    width: parent.width - artistAlbumGrid.leftColSize
-                    elide: Text.ElideRight
-                    color: settings.fontColorActive
-                    style: Text.Raised
-                    styleColor: settings.fontShadowColor
-                    text: albumSelector.album
-                }
+            Text {
+                id: titleLabel
+                font.pointSize: settings.fontS
+                width: parent.width
+                elide: Text.ElideRight
+                color: settings.fontColorActive
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                style: Text.Raised
+                styleColor: settings.fontShadowColor
+                text: moviesSelector.title
             }
         }
     }
@@ -119,7 +81,7 @@ FocusScope {
     states: [
         State {
             name: "MAIN"
-            PropertyChanges { target: albumSelector; focus: true}
+            PropertyChanges { target: moviesSelector; focus: true}
         },
         State {
             name: "MEDIA"

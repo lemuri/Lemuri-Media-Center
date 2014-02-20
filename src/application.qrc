@@ -27,5 +27,7 @@
         <file>images/box-shadow.png</file>
         <file>images/box-shadow-selected.png</file>
         <file>qml/ShortcutButton.qml</file>
+        <file>qml/MovieDelegate.qml</file>
+        <file>qml/MoviesSelector.qml</file>
     </qresource>
 </RCC>

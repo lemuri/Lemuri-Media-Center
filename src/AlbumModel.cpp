@@ -15,7 +15,7 @@ AlbumModel::AlbumModel(QObject *parent) :
     m_manager = new IndexManager(this);
 
     m_roleNames[RolePath]   = "rolePath";
-    m_roleNames[RoleName]   = "roleName";
+    m_roleNames[RoleTitle]  = "roleTitle";
     m_roleNames[RoleArtist] = "roleArtist";
     m_roleNames[RoleDvd]    = "roleDvd";
     m_roleNames[RoleCover]  = "roleCover";
@@ -71,8 +71,8 @@ QVariant AlbumModel::data(const QModelIndex &index, int role) const
         case RolePath:
             return m_albums.at(index.row()).path;
             break;
-        case RoleName:
-            return m_albums.at(index.row()).name;
+        case RoleTitle:
+            return m_albums.at(index.row()).title;
             break;
         case RoleArtist:
             return m_albums.at(index.row()).artist;

@@ -298,7 +298,7 @@ bool MusicImporter::addFile(const QFileInfo &fileInfo, const QString &uuid)
     try {
         // It's said that adding the docs sorted is faster.. (change in future)
         m_rwXapianDB->replace_document(id.toStdString(), document);
-        createCoverFile(fileInfo.dir().path(), title);
+        createCoverFile(fileInfo, title);
 
         return true;
     } catch (const Xapian::Error &error) {
@@ -308,7 +308,7 @@ bool MusicImporter::addFile(const QFileInfo &fileInfo, const QString &uuid)
     }
 }
 
-void MusicImporter::createCoverFile(const QString &absolutePath, const QString &title)
+void MusicImporter::createCoverFile(const QFileInfo &fileInfo, const QString &title)
 {
     QStringList nameFilters;
     nameFilters << QLatin1String("*.png");
@@ -318,16 +318,23 @@ void MusicImporter::createCoverFile(const QString &absolutePath, const QString &
 
     QFileInfoList infoList;
 
+    const QString &cover = MediaCenter::coverPath(fileInfo.absoluteFilePath());
+
     bool localFound = false;
-    QDir dir(absolutePath);
+    QDir dir(fileInfo.absolutePath());
     infoList = dir.entryInfoList(nameFilters,
                                  QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot,
                                  QDir::Size);
-    foreach (const QFileInfo &fileInfo, infoList) {
+    foreach (const QFileInfo &imgFileInfo, infoList) {
+        if (imgFileInfo.completeBaseName() != fileInfo.completeBaseName()) {
+            // Covers must have the same nas as the movie
+            continue;
+        }
+
         const QString &absoluteFilePath = fileInfo.absoluteFilePath();
         QImage image(fileInfo.absoluteFilePath());
         if (image.format() != QImage::Format_Invalid &&
-                QFile::copy(absoluteFilePath, MediaCenter::coverPath(absolutePath))) {
+                QFile::copy(absoluteFilePath, cover)) {
             localFound = true;
             break;
         }
@@ -383,7 +390,7 @@ void MusicImporter::createCoverFile(const QString &absolutePath, const QString &
             return;
         }
 
-        QFile imgFile(MediaCenter::coverPath(absolutePath));
+        QFile imgFile(cover);
         if (imgFile.open(QFile::ReadWrite)) {
             imgFile.write(replyImg->readAll());
         } else {

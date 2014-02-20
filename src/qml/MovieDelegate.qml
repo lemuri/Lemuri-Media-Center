@@ -7,10 +7,9 @@ Item {
     property bool imageReady: cover.status === Image.Ready
     property int shadow: isSelected ? 12 : 8
 
-    property string absolutePath: rolePath
-    property string album: roleName
-    property string artist: roleArtist
+    property string absolutePath: roleFilePath
     property string title: roleTitle
+    property string artist: roleArtist
     property string coverPath: roleCover
     onCoverPathChanged: {
         if (coverPath.length) {
@@ -47,16 +46,6 @@ Item {
         sourceSize.width: parent.width
         fillMode: Image.PreserveAspectCrop
         asynchronous: true
-
-        Image {
-            opacity: 0.7
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            width: parent.width / 3
-            fillMode: Image.PreserveAspectFit
-            asynchronous: true
-            source: roleDvd ? "qrc:/images/dvd.png" : ""
-        }
     }
 
     Image {

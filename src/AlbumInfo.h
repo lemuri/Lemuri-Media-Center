@@ -8,7 +8,7 @@ class AlbumInfo
 public:
     QString path;
     QString artist;
-    QString name;
+    QString title;
     bool isDvd;
 };
 

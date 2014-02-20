@@ -53,9 +53,7 @@ Rectangle {
     Keys.onEscapePressed: mediaPlayer.stop()
 
     Keys.onRightPressed: {
-        console.debug("RIGHT pos1: " + mediaPlayer.position)
         mediaPlayer.position = mediaPlayer.position + 5000
-        console.debug("RIGHT pos2: " + mediaPlayer.position)
     }
 
     Keys.onLeftPressed: {

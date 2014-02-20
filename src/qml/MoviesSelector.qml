@@ -7,8 +7,6 @@ Item {
     signal chooseCD()
     signal showFilterBar()
     property string absolutePath
-    property string album
-    property string artist
     property string title
     property int repeating: 0
     property string startsWithFilter
@@ -35,14 +33,13 @@ Item {
         text: Backend.indexReady ? "Nenhuma mídia encontrada" : "Atualizando índice de mídias"
     }
 
-    AlbumModel {
-        id: albumModel
+    TracksModel {
+        id: tracksModel
         genreFilters: Backend.genreFilters
         Component.onCompleted: {
-            Backend.indexChanged.connect(load)
-            update()
+            Backend.indexChanged.connect(getMovies)
+            getMovies()
         }
-
     }
 
     GridView {
@@ -51,8 +48,8 @@ Item {
         anchors.fill: parent
         anchors.leftMargin: (root.width % cellWidth) / 2
         interactive: false
-        model: albumModel
-        delegate: AlbumDelegate {
+        model: tracksModel
+        delegate: MovieDelegate {
             height: GridView.view.cellHeight
             width: GridView.view.cellWidth
             MouseArea {
@@ -73,17 +70,14 @@ Item {
         cacheBuffer: 5000
 
         onCurrentItemChanged: {
-            console.debug("album: " + currentItem.album);
-            console.debug("artist: " + currentItem.artist);
+            console.debug("title: " + currentItem.title);
             console.debug("absolutePath: " + currentItem.absolutePath);
-            albumSelector.album = currentItem.album
-            albumSelector.artist = currentItem.artist
+            albumSelector.title = currentItem.title
             albumSelector.absolutePath = currentItem.absolutePath
         }
         onCountChanged: {
             if (count === 0) {
-                albumSelector.album = ""
-                albumSelector.artist = ""
+                albumSelector.title = ""
                 albumSelector.absolutePath = ""
             } else {
                 currentIndex = 0

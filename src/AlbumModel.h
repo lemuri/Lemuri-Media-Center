@@ -14,7 +14,7 @@ public:
     enum Role {
         RolePath,
         RoleArtist,
-        RoleName,
+        RoleTitle,
         RoleDvd,
         RoleCover
     };

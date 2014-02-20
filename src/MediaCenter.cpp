@@ -313,9 +313,10 @@ QString MediaCenter::dataDir()
     return QDir::homePath() % QLatin1String("/.lemuri/") % QCoreApplication::applicationName();
 }
 
-QString MediaCenter::coverPath(const QString &absolutePath)
+QString MediaCenter::coverPath(const QString &absoluteFilePath)
 {
-    return absolutePath % QLatin1String("/cover.jpg");
+    QFileInfo fileInfo = absoluteFilePath;
+    return fileInfo.absolutePath() % QLatin1Char('/') % fileInfo.completeBaseName() % QLatin1String(".jpg");
 }
 
 QString MediaCenter::coverThumbPath(const QString &absolutePath)

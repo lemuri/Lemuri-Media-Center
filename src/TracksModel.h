@@ -15,7 +15,8 @@ public:
         RoleArtist,
         RoleTitle,
         RoleFilePath,
-        RoleIsVideo
+        RoleIsVideo,
+        RoleCover
     };
 
     explicit TracksModel(QObject *parent = 0);
@@ -35,6 +36,7 @@ public:
 
 public Q_SLOTS:
     void update(const QString &path);
+    void getMovies();
     void closeIndex();
 
 Q_SIGNALS:

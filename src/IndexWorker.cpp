@@ -29,7 +29,7 @@ bool albumCaseInsensitiveLessThan(const AlbumInfo &s1, const AlbumInfo &s2)
     if (artistRes < 0) {
         return true;
     } else if (artistRes == 0) {
-        int nameRes = QString::localeAwareCompare(s1.name, s2.name);
+        int nameRes = QString::localeAwareCompare(s1.title, s2.title);
         if (nameRes < 0) {
             return true;
         } else if (nameRes == 0) {
@@ -128,13 +128,19 @@ void IndexWorker::getTracks(quint64 id, const QString &albumPath, const QStringL
     TrackInfoList ret;
 
     Xapian::Enquire enquire(*m_database);
-    Xapian::Query categoryPathQuery(Xapian::Query::OP_VALUE_RANGE,
-                                    MusicImporter::AbsolutePath,
-                                    albumPath.toStdString(),
-                                    albumPath.toStdString());
-    Xapian::Query query(Xapian::Query::OP_AND,
-                        categoryPathQuery,
-                        filter(genreFilters));
+
+    Xapian::Query query;
+    if (albumPath.isNull()) {
+        query = filter(genreFilters);
+    } else {
+        Xapian::Query categoryPathQuery(Xapian::Query::OP_VALUE_RANGE,
+                                        MusicImporter::AbsolutePath,
+                                        albumPath.toStdString(),
+                                        albumPath.toStdString());
+        query = Xapian::Query(Xapian::Query::OP_AND,
+                              categoryPathQuery,
+                              filter(genreFilters));
+    }
     enquire.set_query(query);
 
     // Get matches one result is enough
@@ -148,7 +154,7 @@ void IndexWorker::getTracks(quint64 id, const QString &albumPath, const QStringL
         info.artist = QString::fromStdString(doc.get_value(MusicImporter::Artist));
         info.isVideo = doc.get_value(MusicImporter::IsVideo).compare("0");
         info.trackNumber = std::atoi(doc.get_value(MusicImporter::TrackNumber).c_str());
-
+        qDebug() << "TRACK" << info.title;
         ret << info;
     }
     qSort(ret.begin(), ret.end(), trackCaseInsensitiveLessThan);

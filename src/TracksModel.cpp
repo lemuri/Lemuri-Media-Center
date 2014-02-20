@@ -1,6 +1,9 @@
 #include "TracksModel.h"
 
 #include "IndexQuery.h"
+#include "MediaCenter.h"
+
+#include <QFileInfo>
 
 TracksModel::TracksModel(QObject *parent) :
     QAbstractItemModel(parent)
@@ -12,6 +15,7 @@ TracksModel::TracksModel(QObject *parent) :
     m_roleNames[RoleArtist]   = "roleArtist";
     m_roleNames[RoleFilePath] = "roleFilePath";
     m_roleNames[RoleIsVideo]  = "roleIsVideo";
+    m_roleNames[RoleCover]  = "roleCover";
 }
 
 QStringList TracksModel::genreFilters() const
@@ -78,6 +82,14 @@ QVariant TracksModel::data(const QModelIndex &index, int role) const
         case RoleIsVideo:
             return m_tracks.at(index.row()).isVideo;
             break;
+        case RoleCover:
+        {
+            const QString &file = MediaCenter::coverPath(m_tracks.at(index.row()).absoluteFilePath);
+            if (QFile::exists(file)) {
+                return QString("file://%1").arg(file);
+            }
+            return QString();
+        }
         }
     }
     return QVariant();
@@ -98,6 +110,20 @@ void TracksModel::update(const QString &path)
 
     m_lastPathSearched = path;
     IndexQuery *query = m_manager->getTracks(path, m_genreFilters);
+    connect(query, &IndexQuery::finished,
+            this, &TracksModel::updateFinished);
+}
+
+void TracksModel::getMovies()
+{
+    if (m_tracks.size()) {
+        beginResetModel();
+        m_tracks.clear();
+        endResetModel();
+    }
+
+    m_lastPathSearched = QString();
+    IndexQuery *query = m_manager->getTracks(QString(), m_genreFilters);
     connect(query, &IndexQuery::finished,
             this, &TracksModel::updateFinished);
 }

@@ -61,7 +61,7 @@ public:
     Q_INVOKABLE void setConfig(const QString &name, int value);
 
     static QString dataDir();
-    static QString coverPath(const QString &absolutePath);
+    static QString coverPath(const QString &absoluteFilePath);
     static QString coverThumbPath(const QString &absolutePath);
     static QString backgroundPath();
     static QString pathMedia();
