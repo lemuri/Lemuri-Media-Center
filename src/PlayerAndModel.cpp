@@ -5,6 +5,7 @@
 #include <QFileInfo>
 #include <QUrl>
 #include <QMediaPlaylist>
+#include <QTime>
 #include <QTimer>
 #include <QStringBuilder>
 #include <QDebug>
@@ -37,6 +38,17 @@ bool PlayerAndModel::hasVideo() const
 qint64 PlayerAndModel::duration() const
 {
     return m_player->duration();
+}
+
+QString PlayerAndModel::durationString() const
+{
+    return QTime(0, 0).addSecs(m_player->duration() / 1000).toString(QLatin1String("-hh:mm:ss"));
+}
+
+QString PlayerAndModel::remainingString() const
+{
+    int value = (m_player->duration() - m_player->position()) / 1000;
+    return QTime(0, 0).addSecs(value).toString(QLatin1String("-hh:mm:ss"));
 }
 
 qint64 PlayerAndModel::position() const

@@ -144,8 +144,7 @@ File *Lemuri::FileTypeResolver::createFile(FileName fileName, bool readPropertie
 #endif
 
     if (!result) {
-        qDebug() << QString("FileTypeResolver: file %1 (mimetype %2) not recognized as "
-                            "Amarok-compatible" ).arg(fileName, mimetype.name());
+        qDebug() << QString("FileTypeResolver: file %1 (mimetype %2) was not recognized").arg(fileName, mimetype.name());
     }
 
     if(result && !result->isValid()) {

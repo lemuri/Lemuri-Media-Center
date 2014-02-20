@@ -6,6 +6,7 @@
 #include <QFileInfo>
 #include <QTimer>
 #include <QMimeDatabase>
+#include <QNetworkAccessManager>
 
 #undef slots
 #include <xapian.h>
@@ -58,6 +59,7 @@ private:
     static QString movieSection(const QString &absolutePath);
 
     Xapian::WritableDatabase *m_rwXapianDB;
+    QNetworkAccessManager m_nam;
     QMimeDatabase m_db;
     QString m_mediaPath;
     quint64 m_mediaCount;

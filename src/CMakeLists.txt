@@ -27,6 +27,7 @@ set(lmc_SRCS
     ScreenSaver.cpp
     DBusInterface.cpp
     MediaCenter.cpp
+    themoviedb.cpp
     mimefileresolver.cpp
     main.cpp
 )

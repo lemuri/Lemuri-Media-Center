@@ -14,6 +14,7 @@ class PlayerAndModel : public QObject
     Q_PROPERTY(bool hasVideo READ hasVideo NOTIFY hasVideoChanged)
     Q_PROPERTY(qint64 duration READ duration NOTIFY durationChanged)
     Q_PROPERTY(qint64 position READ position WRITE setPosition NOTIFY positionChanged)
+    Q_PROPERTY(QString remainingString READ remainingString NOTIFY positionChanged)
     Q_PROPERTY(int volume READ volume WRITE setVolume NOTIFY volumeChanged)
     Q_PROPERTY(QObject* mediaObject READ mediaObject NOTIFY mediaObjectChanged)
 public:
@@ -29,7 +30,9 @@ public:
     bool hasVideo() const;
 
     qint64 duration() const;
+    QString durationString() const;
 
+    QString remainingString() const;
     qint64 position() const;
     void setPosition(qint64 position);
 

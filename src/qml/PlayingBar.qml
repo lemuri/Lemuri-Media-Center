@@ -69,7 +69,6 @@ Item {
             Slider {
                 id: slider
                 Layout.fillWidth: true
-                Layout.columnSpan: 2
                 maximumValue: mediaPlayer.duration / 1000
                 stepSize: 5
                 onValueChanged: {
@@ -92,6 +91,11 @@ Item {
                         }
                     }
                 }
+            }
+
+            Text {
+                color: "#fff"
+                text: mediaPlayer.remainingString
             }
         }
     }

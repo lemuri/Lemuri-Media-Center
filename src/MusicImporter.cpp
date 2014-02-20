@@ -2,6 +2,7 @@
 
 #include "MediaCenter.h"
 #include "mimefileresolver.h"
+#include "themoviedb.h"
 
 #include <QCoreApplication>
 #include <QCryptographicHash>
@@ -14,20 +15,14 @@
 #include <QDebug>
 #include <QImage>
 
-#include <QNetworkAccessManager>
-#include <QUrl>
-#include <QUrlQuery>
-#include <QNetworkRequest>
-#include <QNetworkReply>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
+#include <QRegularExpression>
 
 #include <fileref.h>
 #include <tag.h>
 
 MusicImporter::MusicImporter() :
     m_rwXapianDB(0),
+    m_nam(this),
     m_mediaPath(MediaCenter::pathMedia()),
     m_mediaCount(0)
 {
@@ -344,61 +339,11 @@ void MusicImporter::createCoverFile(const QFileInfo &fileInfo, const QString &ti
         return;
     }
 
-    QNetworkAccessManager nam;
-    QUrl url("https://api.themoviedb.org/3/search/movie");
-    QUrlQuery query;
-    query.addQueryItem(QLatin1String("api_key"), QLatin1String("3e4b22d9919ae1fcaada321737e19dba"));
-    query.addQueryItem(QLatin1String("query"), title);
-    query.addQueryItem(QLatin1String("language"), QLatin1String("pt_BR"));
-    url.setQuery(query);
+    QString titleEscaped = title;
 
-    qDebug() << url << url.toString();
-    QNetworkRequest req(url);
-    req.setRawHeader("Accept", "application/json");
-
-    QNetworkReply *reply = nam.get(req);
-    QEventLoop loop;
-    connect(reply, &QNetworkReply::finished,
-            &loop, &QEventLoop::quit);
-    loop.exec();
-
-    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-    if (document.isNull()) {
-        qDebug() << "Null document for" << title;
-        return;
-    }
-
-//    document.object()["results"]
-    QJsonArray array = document.object()["results"].toArray();
-    if (array.isEmpty()) {
-        qDebug() << "Null array for" << title;
-        return;
-    }
-
-    QString posterPath = array.first().toObject()["poster_path"].toString();
-    if (!posterPath.isEmpty()) {
-        QUrl urlImg("http://image.tmdb.org/t/p/w500/" % posterPath);
-        QNetworkRequest reqImg(urlImg);
-        QNetworkReply *replyImg = nam.get(reqImg);
-        QEventLoop loop;
-        connect(replyImg, &QNetworkReply::finished,
-                &loop, &QEventLoop::quit);
-        loop.exec();
-
-        if (replyImg->error()) {
-            qDebug() << replyImg->errorString();
-            return;
-        }
-
-        QFile imgFile(cover);
-        if (imgFile.open(QFile::ReadWrite)) {
-            imgFile.write(replyImg->readAll());
-        } else {
-            qDebug() << "Failed to open" << imgFile.fileName();
-        }
-    } else {
-        qDebug() << "Null results for" << title;
-    }
+    TheMovieDB *tmdb = new TheMovieDB(this);
+    tmdb->setNetworkAccessManager(&m_nam);
+    tmdb->getCover(fileInfo, titleEscaped.replace(QRegularExpression("[^\\w]"), " "));
 }
 
 void MusicImporter::checkMediaCountChanged(quint64 &medieCount)
