@@ -63,6 +63,7 @@ public:
     static QString dataDir();
     static QString coverPath(const QString &absoluteFilePath);
     static QString coverThumbPath(const QString &absolutePath);
+    static QString albumSection(const QString &absolutePath);
     static QString backgroundPath();
     static QString pathMedia();
     static QString pathPlaylist();

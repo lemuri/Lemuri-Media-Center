@@ -131,7 +131,7 @@ void IndexWorker::getTracks(quint64 id, const QString &albumPath, const QStringL
 
     Xapian::Query query;
     if (albumPath.isNull()) {
-        query = filter(genreFilters);
+        query = Xapian::Query::MatchAll;//filter(genreFilters);
     } else {
         Xapian::Query categoryPathQuery(Xapian::Query::OP_VALUE_RANGE,
                                         MusicImporter::AbsolutePath,
@@ -144,7 +144,7 @@ void IndexWorker::getTracks(quint64 id, const QString &albumPath, const QStringL
     enquire.set_query(query);
 
     // Get matches one result is enough
-    Xapian::MSet matches = enquire.get_mset(0, 60, m_database->get_doccount());
+    Xapian::MSet matches = enquire.get_mset(0, m_database->get_doccount(), m_database->get_doccount());
     for (Xapian::MSetIterator i = matches.begin(); i != matches.end(); ++i) {
         Xapian::Document doc = i.get_document();
 

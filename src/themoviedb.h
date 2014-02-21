@@ -11,16 +11,18 @@ class TheMovieDB : public QObject
 public:
     explicit TheMovieDB(QObject *parent = 0);
 
-    void getCover(const QFileInfo &fileInfo, const QString &title);
+    void getCover(const QFileInfo &fileInfo, QStringList &titles);
 
     void setNetworkAccessManager(QNetworkAccessManager *nam);
 
 private:
     void searchFinished();
     void downloadFinished();
+    void tryAgain();
 
     QNetworkAccessManager *m_nam = 0;
     QString m_title;
+    QStringList m_titles;
     QFileInfo m_fileInfo;
 };
 

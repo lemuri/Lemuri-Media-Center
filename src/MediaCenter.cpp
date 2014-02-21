@@ -324,6 +324,11 @@ QString MediaCenter::coverThumbPath(const QString &absolutePath)
     return absolutePath % QLatin1String("/cover-thumb.jpg");
 }
 
+QString MediaCenter::albumSection(const QString &absolutePath)
+{
+    return absolutePath.section(QLatin1Char('/'), -1);
+}
+
 QString MediaCenter::pathMedia()
 {
     // TODO ue xdg dirs

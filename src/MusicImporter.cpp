@@ -240,6 +240,9 @@ bool MusicImporter::addFile(const QFileInfo &fileInfo, const QString &uuid)
     document.add_value(FileLastModified, QString::number(fileInfo.lastModified().toTime_t()).toStdString());
     document.add_value(FileSize, QString::number(fileInfo.size()).toStdString());
 
+    QStringList titles;
+    titles << fileInfo.completeBaseName();
+
     TagLib::FileRef fileTag(fileInfo.absoluteFilePath().toUtf8().constData());
     if (!fileTag.isNull()) {
         //    if (file.mimeType().startsWith(QLatin1String("video"))) {
@@ -268,6 +271,7 @@ bool MusicImporter::addFile(const QFileInfo &fileInfo, const QString &uuid)
         const TagLib::String &titleTag = fileTag.tag()->title();
         if (!titleTag.isEmpty() && !titleTag.isNull()) {
             title = titleTag.toCString(true);
+            titles.prepend(title);
         } else {
             title = fileInfo.completeBaseName();
         }
@@ -287,13 +291,14 @@ bool MusicImporter::addFile(const QFileInfo &fileInfo, const QString &uuid)
     } else {
         qDebug() << "Null taglib for:" << fileInfo.absoluteFilePath();
     }
-
     document.add_value(Title, title.toStdString());
+
+    titles << MediaCenter::albumSection(fileInfo.absolutePath());
 
     try {
         // It's said that adding the docs sorted is faster.. (change in future)
         m_rwXapianDB->replace_document(id.toStdString(), document);
-        createCoverFile(fileInfo, title);
+        createCoverFile(fileInfo, titles);
 
         return true;
     } catch (const Xapian::Error &error) {
@@ -303,7 +308,7 @@ bool MusicImporter::addFile(const QFileInfo &fileInfo, const QString &uuid)
     }
 }
 
-void MusicImporter::createCoverFile(const QFileInfo &fileInfo, const QString &title)
+void MusicImporter::createCoverFile(const QFileInfo &fileInfo, QStringList &titles)
 {
     QStringList nameFilters;
     nameFilters << QLatin1String("*.png");
@@ -339,11 +344,9 @@ void MusicImporter::createCoverFile(const QFileInfo &fileInfo, const QString &ti
         return;
     }
 
-    QString titleEscaped = title;
-
     TheMovieDB *tmdb = new TheMovieDB(this);
     tmdb->setNetworkAccessManager(&m_nam);
-    tmdb->getCover(fileInfo, titleEscaped.replace(QRegularExpression("[^\\w]"), " "));
+    tmdb->getCover(fileInfo, titles);
 }
 
 void MusicImporter::checkMediaCountChanged(quint64 &medieCount)
