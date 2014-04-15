@@ -11,9 +11,9 @@ int main(int argc, char *argv[])
 {
     Q_INIT_RESOURCE(application);
 
-    QCoreApplication::setOrganizationName("Lemuri");
+    QCoreApplication::setOrganizationName("lemuri");
     QCoreApplication::setOrganizationDomain("lemuri.org");
-    QCoreApplication::setApplicationName("LemuriMediaCenter");
+    QCoreApplication::setApplicationName("lemuri-media-center");
     QCoreApplication::setApplicationVersion("1.0.0");
 
     QApplication app(argc, argv);

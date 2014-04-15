@@ -26,6 +26,7 @@
 #include <QSettings>
 #include <QDir>
 #include <QDirIterator>
+#include <QStandardPaths>
 #include <QDebug>
 
 #define CORE_GENRE_FILTERS "core/GenreFilters"
@@ -310,7 +311,7 @@ void MediaCenter::setConfig(const QString &name, int value)
 
 QString MediaCenter::dataDir()
 {
-    return QDir::homePath() % QLatin1String("/.lemuri/") % QCoreApplication::applicationName();
+    return QStandardPaths::writableLocation(QStandardPaths::DataLocation);
 }
 
 QString MediaCenter::coverPath(const QString &absoluteFilePath)
@@ -331,8 +332,11 @@ QString MediaCenter::albumSection(const QString &absolutePath)
 
 QString MediaCenter::pathMedia()
 {
-    // TODO ue xdg dirs
-    return QDir::homePath() % "/Vídeos";
+    QStringList paths = QStandardPaths::standardLocations(QStandardPaths::MoviesLocation);
+    if (!paths.isEmpty()) {
+        return paths.first();
+    }
+    return QString();
 }
 
 QString MediaCenter::pathPlaylist()
